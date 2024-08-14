@@ -191,3 +191,6 @@ package.json
 test.py
 test/
 test_data*
+
+# Logs
+logs/

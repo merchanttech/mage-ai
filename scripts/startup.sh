@@ -39,24 +39,32 @@ clear
 read -p "Install github hooks? (y/n): " user_input
 if [ "$user_input" == "y" ]; then
     echo "Installing hooks..."
+
+    # Mark the workspace as a safe directory for Git
+    git config --global --add safe.directory /workspaces/mage-ai
+
     make install-hooks
     source .venv/bin/activate
     pre-commit install
 else
     echo "Skipping hooks."
 fi
+
 # === Initialise if default_repo exists ===
 # TODO: Change so user can choose the name. (Append the folder name to the end of .gitignore if user specifies a different name & cache the name)
+# TODO: Potentially just read from the .env file and explain to users which vars are needed in the readme
 if [ ! -d "default_repo" ]; then
     echo "'default_repo' directory does not exist. Running initialization script."
     ./scripts/init.sh default_repo
 else
     echo "'default_repo' directory exists. Skipping initialization."
 fi
-clear
 
+# === Completion message ===
+clear
 echo "Setup script completed at $(date) & logs stored at ./logs/startup_logs_$current_date.log"
 
+# === Start development environment ===
 read -p "Start the development environment now? (y/n): " user_input
 if [ "$user_input" == "y" ]; then
     echo "Starting the development environment..."
@@ -65,5 +73,6 @@ else
     echo "Exiting terminal."
     exit 0
 fi
+
 # Keep the shell open after the script completes (for debugging)
 exec bash
